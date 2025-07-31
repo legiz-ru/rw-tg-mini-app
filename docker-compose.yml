@@ -1,0 +1,21 @@
+services:
+  rw-tg-mini-app:
+    image: ghcr.io/legiz-ru/rw-tg-mini-app:latest
+    container_name: rw-tg-mini-app
+    hostname: rw-tg-mini-app
+    restart: always
+    volumes:
+      - ./index.html:/app/views/index.html
+      - ./buyLink.html:/app/views/buyLink.html
+      - ./app-config.json:/app/public/assets/app-config.json
+    env_file:
+      - .env-mini-app
+    ports:
+      - '127.0.0.1:3020:3020'
+    networks:
+      - remnawave-network
+
+networks:
+  remnawave-network:
+    driver: bridge
+    external: true
