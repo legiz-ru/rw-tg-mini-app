@@ -8,12 +8,29 @@
     <script>
         // Данные о подписке будут здесь в формате Base64
         const panelData = "<%= panelData %>";
-        // Вы можете декодировать их и использовать в вашем JS-коде
-        // const decodedData = JSON.parse(atob(panelData));
-        // console.log(decodedData);
+
+        // Декодируем Base64 и парсим JSON
+        let decodedData = {};
+        try {
+            decodedData = JSON.parse(atob(panelData));
+        } catch (e) {
+            console.error("Ошибка при декодировании данных:", e);
+        }
+
+        // Функция для отображения данных на странице
+        function renderPanelData(data) {
+            const container = document.getElementById('panel-output');
+            container.textContent = JSON.stringify(data, null, 2);
+        }
+
+        // Ждём загрузки DOM и выводим данные
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPanelData(decodedData);
+        });
     </script>
 </head>
 <body>
     <h1>Ваши подписки</h1>
-    </body>
+    <pre id="panel-output" style="background: #f5f5f5; padding: 1em; border-radius: 5px;"></pre>
+</body>
 </html>

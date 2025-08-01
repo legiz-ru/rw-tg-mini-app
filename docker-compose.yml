@@ -6,7 +6,8 @@ services:
     restart: always
     volumes:
       - ./index.html:/app/views/index.html
-      - ./buyLink.html:/app/views/buyLink.html
+      # - ./buyLink.html:/app/views/buyLink.html
+      # - ./nontg.html:/app/views/nontg.html
       - ./app-config.json:/app/public/assets/app-config.json
     env_file:
       - .env-mini-app
