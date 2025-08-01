@@ -1,13 +1,14 @@
 {
-  "name": "rw-tg-mini-app",
+  "name": "remnawave-telegram-mini-app",
   "version": "1.0.0",
-  "description": "Telegram Subscription Mini App for Remnawave",
+  "description": "Secure Telegram Subscription Mini App for Remnawave",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "express": "^4.18.2"
+    "axios": "^1.7.2",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0"
   }
 }
