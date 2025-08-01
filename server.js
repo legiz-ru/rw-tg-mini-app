@@ -146,7 +146,9 @@ app.post('/auth/validate', async (req, res) => {
             // Вместо редиректа отправляем HTML страницы покупки
             try {
                 const buyHtml = await renderTemplate(path.join(__dirname, 'views', 'buyLink.html'), {
-                    buyLink: BUY_LINK
+                    buyLink: BUY_LINK,
+                    metaTitle: META_TITLE,
+                    metaDescription: META_DESCRIPTION
                 });
                 return res.json({ status: 'INACTIVE', html: buyHtml });
             } catch (renderError) {
@@ -162,10 +164,20 @@ app.post('/auth/validate', async (req, res) => {
 });
 
 // --- Маршруты для страниц ---
-const mainRouteHandler = (req, res) => {
+const mainRouteHandler = async (req, res) => {
     const userAgent = req.headers['user-agent'] || '';
     if (!userAgent.toLowerCase().includes('telegram')) {
-        return res.sendFile(path.join(__dirname, 'views', 'nontg.html'));
+        try {
+            const html = await renderTemplate(path.join(__dirname, 'views', 'nontg.html'), {
+                metaTitle: META_TITLE,
+                metaDescription: META_DESCRIPTION,
+                buyLink: BUY_LINK
+            });
+            return res.send(html);
+        } catch (error) {
+            console.error('[RENDER_ERROR]', error.message);
+            return res.status(500).send('Error loading page');
+        }
     }
     // Всегда отдаем `init.html`, который запустит процесс аутентификации
     res.sendFile(path.join(__dirname, 'views', 'init.html'));
@@ -174,7 +186,9 @@ const mainRouteHandler = (req, res) => {
 app.get('/buy', async (req, res) => {
     try {
         const html = await renderTemplate(path.join(__dirname, 'views', 'buyLink.html'), {
-            buyLink: BUY_LINK
+            buyLink: BUY_LINK,
+            metaTitle: META_TITLE,
+            metaDescription: META_DESCRIPTION
         });
         res.send(html);
     } catch (error) {
