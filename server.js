@@ -163,7 +163,7 @@ app.post('/auth/validate', async (req, res) => {
     }
 });
 
-// --- Маршруты для страниц ---
+// --- Основной обработчик маршрутов ---
 const mainRouteHandler = async (req, res) => {
     const userAgent = req.headers['user-agent'] || '';
     if (!userAgent.toLowerCase().includes('telegram')) {
@@ -183,7 +183,8 @@ const mainRouteHandler = async (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'init.html'));
 };
 
-app.get('/buy', async (req, res) => {
+// --- Обработчик страницы покупки ---
+const buyRouteHandler = async (req, res) => {
     try {
         const html = await renderTemplate(path.join(__dirname, 'views', 'buyLink.html'), {
             buyLink: BUY_LINK,
@@ -194,17 +195,42 @@ app.get('/buy', async (req, res) => {
     } catch (error) {
         res.status(500).send('Error loading page');
     }
-});
+};
 
-// --- Регистрация основных маршрутов ---
+// --- Регистрация маршрутов ---
 const subPrefix = CUSTOM_SUB_PREFIX ? `/${CUSTOM_SUB_PREFIX}` : null;
-app.get('/', mainRouteHandler);
+
 if (subPrefix) {
+    // Если установлен кастомный префикс, регистрируем маршруты только с префиксом
     app.get(subPrefix, mainRouteHandler);
+    app.get(`${subPrefix}/buy`, buyRouteHandler);
+    
+    // Все остальные пути (включая корневой) возвращают 404
+    app.get('*', (req, res, next) => {
+        // Пропускаем /assets и пути с префиксом
+        if (req.path.startsWith('/assets') || req.path.startsWith(subPrefix)) {
+            return next();
+        }
+        console.log(`[ROUTING] 404 for path: ${req.path} (custom prefix is set: ${subPrefix})`);
+        res.status(404).send('Not Found');
+    });
+    
     console.log(`Custom route prefix registered: ${subPrefix}`);
+    console.log(`Only paths with prefix ${subPrefix} are available`);
+} else {
+    // Если кастомный префикс не установлен, используем стандартные маршруты
+    app.get('/', mainRouteHandler);
+    app.get('/buy', buyRouteHandler);
+    console.log('Standard routing registered (no custom prefix)');
 }
 
 // --- Запуск сервера ---
 app.listen(port, () => {
     console.log(`Telegram Mini App server started on http://localhost:${port}`);
+    if (subPrefix) {
+        console.log(`Application available ONLY at: http://localhost:${port}${subPrefix}`);
+        console.log(`Assets protected and available at: http://localhost:${port}/assets/* (ACTIVE users only)`);
+    } else {
+        console.log(`Application available at: http://localhost:${port}/`);
+    }
 });
