@@ -47,11 +47,16 @@
                         document.open();
                         document.write(data.html);
                         document.close();
+                    } else if (data.status === 'INACTIVE' && data.html) {
+                        // Если пользователь неактивен, но есть HTML - показываем страницу покупки
+                        document.open();
+                        document.write(data.html);
+                        document.close();
                     } else if (data.redirectUrl) {
-                        // Если сервер сказал перенаправить (например, на страницу покупки)
+                        // Если сервер сказал перенаправить
                         window.location.href = data.redirectUrl;
                     } else {
-                         throw new Error('Некорректный ответ от сервера.');
+                        throw new Error('Некорректный ответ от сервера.');
                     }
                 })
                 .catch(error => {

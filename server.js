@@ -137,6 +137,25 @@ app.post('/auth/validate', async (req, res) => {
         }
     } catch (error) {
         console.error('[API_ERROR]', error.message);
+        
+        // Если пользователь не найден (404), показываем страницу покупки
+        if (error.response && error.response.status === 404) {
+            console.log('[AUTH] User not found in Remnawave, redirecting to buy page');
+            req.session.userStatus = 'INACTIVE';
+            
+            // Вместо редиректа отправляем HTML страницы покупки
+            try {
+                const buyHtml = await renderTemplate(path.join(__dirname, 'views', 'buyLink.html'), {
+                    buyLink: BUY_LINK
+                });
+                return res.json({ status: 'INACTIVE', html: buyHtml });
+            } catch (renderError) {
+                console.error('[RENDER_ERROR]', renderError.message);
+                return res.json({ status: 'INACTIVE', redirectUrl: '/buy' });
+            }
+        }
+        
+        // Для других ошибок - редирект на страницу покупки
         req.session.userStatus = 'INACTIVE';
         return res.status(500).json({ status: 'ERROR', redirectUrl: '/buy' });
     }
