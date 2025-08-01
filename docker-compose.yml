@@ -5,14 +5,14 @@ services:
     hostname: rw-tg-mini-app
     restart: always
     volumes:
-      - ./index.html:/app/views/index.html
-      # - ./buyLink.html:/app/views/buyLink.html
-      # - ./nontg.html:/app/views/nontg.html
-      - ./app-config.json:/app/public/assets/app-config.json
+      # Mount protected assets config
+      - ./app-config.json:/app/public/assets-protected/app-config.json
+      # Optional: mount custom pages or assets
+      # - ./custom-pages:/app/src/app/custom
     env_file:
       - .env-mini-app
     ports:
-      - '127.0.0.1:3020:3020'
+      - '127.0.0.1:3000:3000' # Changed from 3020 to 3000 for Next.js
     networks:
       - remnawave-network
 

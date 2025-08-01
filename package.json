@@ -2,13 +2,40 @@
   "name": "remnawave-telegram-mini-app",
   "version": "1.0.0",
   "description": "Secure Telegram Subscription Mini App for Remnawave",
-  "main": "server.js",
+  "private": true,
   "scripts": {
-    "start": "node server.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
   "dependencies": {
-    "axios": "^1.7.2",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0"
+    "@mantine/core": "^7.17.3",
+    "@mantine/dates": "^7.17.3",
+    "@mantine/hooks": "^7.17.3",
+    "@mantine/modals": "^7.17.3",
+    "@mantine/notifications": "^7.17.3",
+    "@mantine/nprogress": "^7.17.3",
+    "@tabler/icons-react": "^3.31.0",
+    "@telegram-apps/sdk-react": "^2.0.22",
+    "axios": "^1.9.0",
+    "dayjs": "^1.11.13",
+    "next": "14.2.4",
+    "next-intl": "^3.17.6",
+    "ofetch": "^1.4.1",
+    "postcss": "^8.5.3",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
+    "react": "^18",
+    "react-dom": "^18",
+    "uqr": "^0.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.4",
+    "typescript": "^5"
   }
 }
